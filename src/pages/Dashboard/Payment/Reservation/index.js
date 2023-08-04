@@ -4,8 +4,9 @@ import { getPersonalInformations } from '../../../../services/enrollmentApi.js';
 import { toast } from 'react-toastify';
 import { ConfirmationArea, Container, Content, Description, FinishOrderMessage, HotelPrice, HotelsOptionsItem, HotelsOptionsList, Instruction, Message, OrderPrice, ReservationButton, TicketsTypeList } from './styles.js';
 import { StyledTypography } from '../../../../components/PersonalInformationForm/index.js';
-import { createTicketReservation, getTicketsTypes } from '../../../../services/ticketsApi.js';
+import { createTicketReservation, getTicket, getTicketsTypes } from '../../../../services/ticketsApi.js';
 import TicketType from '../../../../components/TicketTypeItem/index.jsx';
+import { useNavigate } from 'react-router';
 
 export default function Payment() {
   const { userData } = useContext(UserContext);
@@ -13,10 +14,14 @@ export default function Payment() {
   const [ticketsTypes, setTicketsTypes] = useState([]);
   const [selectedTicket, setSelectedTicket] = useState(null);
   const [hotelOption, setHotelOption] = useState({ option: null, value: null });
+  const navigate = useNavigate();
+
   useEffect(() => {
+    checkReservation();
     getUserEnrollment();
     getTicketsTypesList();
   }, []);
+
   async function getUserEnrollment() {
     try {
       const data = await getPersonalInformations(userData.token);
@@ -35,6 +40,15 @@ export default function Payment() {
     }
   }
 
+  async function checkReservation() {
+    try {
+      const data = await getTicket(userData.token);
+      if (data) navigate('/dashboard/checkPayment');
+    } catch (error) {
+      console.log(`error ${error}`);
+    }
+  }
+
   function handleHotelOption(option) {
     setHotelOption(option);
   }
@@ -45,9 +59,9 @@ export default function Payment() {
     try {
       await createTicketReservation(userData.token, ticketTypeId);
       toast('Ingresso reservado com sucesso!!');
-      alert('Alert para lembrar de implementar aqui o fluxo para a tela de pagamento, to na linha 48');
+      navigate('/dashboard/checkPayment');
     } catch (error) {
-      alert('Você ja possui uma reserva em aberto! Alert para lembrar de implementar aqui o fluxo para a tela de pagamento, to na linha 48');
+      console.log(error);
     }
   }
   return (
@@ -79,7 +93,7 @@ export default function Payment() {
             </TicketsTypeList>
             {selectedTicket ?
               <>
-                {!selectedTicket.isRemote || selectedTicket.includesHotel ?
+                {!selectedTicket.isRemote && selectedTicket.includesHotel ?
                   <Instruction>Ótimo! Agora escolha sua modalidade de hospedagem</Instruction> 
                   : 
                   <ConfirmationArea>
@@ -88,7 +102,7 @@ export default function Payment() {
                   </ConfirmationArea> 
                 }
                 
-                {!selectedTicket.isRemote && selectedTicket.includesHotel?
+                {(!selectedTicket.isRemote && selectedTicket.includesHotel === true) || !selectedTicket.includesHotel === false?
                   <>
                     <HotelsOptionsList>
                       <HotelsOptionsItem selected = {hotelOption.option === false} onClick={() => handleHotelOption({ option: false, value: 0 })}>
