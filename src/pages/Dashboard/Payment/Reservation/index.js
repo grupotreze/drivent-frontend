@@ -52,13 +52,13 @@ export default function Payment() {
   function handleHotelOption(option) {
     setHotelOption(option);
   }
-  console.log(hotelOption.option);
 
   //TODO : Implementar a função responsável por efetivar a reserva e seguir para a tela de pagamento
   //TODO: Não implementar a tela de reserva de ingresso junto com a tela de pagamento
   async function handleReservation(ticketTypeId) {
+    const ticketWithoutHotel = ticketsTypes.filter(v => {if(v.isRemote === false && v.includesHotel === false) return v.id;});
     try {
-      await createTicketReservation(userData.token, hotelOption.option === false ? 2 : ticketTypeId);
+      await createTicketReservation(userData.token, hotelOption.option === false ? ticketWithoutHotel[0].id : ticketTypeId);
       toast('Ingresso reservado com sucesso!!');
       navigate('/dashboard/checkPayment');
     } catch (error) {
@@ -76,8 +76,11 @@ export default function Payment() {
           <Content>
             <Instruction>Primeiro, escolha sua modalidade de ingresso</Instruction>
             <TicketsTypeList>
-              {ticketsTypes.map(ticket =>  {
-                if (ticket.id !== 2) {
+              {ticketsTypes.map(ticket => {
+                if (
+                  (ticket.isRemote === false && ticket.includesHotel === true) ||
+                  (ticket.isRemote === true)
+                ) {
                   return(
                     <TicketType 
                       isRemote={ticket.isRemote} 
