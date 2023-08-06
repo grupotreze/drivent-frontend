@@ -56,14 +56,16 @@ export default function Payment() {
   //TODO : Implementar a função responsável por efetivar a reserva e seguir para a tela de pagamento
   //TODO: Não implementar a tela de reserva de ingresso junto com a tela de pagamento
   async function handleReservation(ticketTypeId) {
+    const ticketWithoutHotel = ticketsTypes.filter(v => {if(v.isRemote === false && v.includesHotel === false) return v.id;});
     try {
-      await createTicketReservation(userData.token, ticketTypeId);
+      await createTicketReservation(userData.token, hotelOption.option === false ? ticketWithoutHotel[0].id : ticketTypeId);
       toast('Ingresso reservado com sucesso!!');
       navigate('/dashboard/checkPayment');
     } catch (error) {
       console.log(error);
     }
   }
+  
   return (
     <>
       <StyledTypography variant="h4">Ingresso e pagamento</StyledTypography>
@@ -75,20 +77,25 @@ export default function Payment() {
             <Instruction>Primeiro, escolha sua modalidade de ingresso</Instruction>
             <TicketsTypeList>
               {ticketsTypes.map(ticket => {
-                return(
-                  <TicketType 
-                    isRemote={ticket.isRemote} 
-                    ticket={ticket.name} 
-                    includesHotel={ticket.includesHotel} 
-                    price={ticket.price} 
-                    key={ticket.id}
-                    id={ticket.id}
-                    selectedTicket= {selectedTicket}
-                    setSelectedTicket = {setSelectedTicket}
-                    currentTicket={ticket}
-                    setHotelOption = {setHotelOption}
-                  />
-                );
+                if (
+                  (ticket.isRemote === false && ticket.includesHotel === true) ||
+                  (ticket.isRemote === true)
+                ) {
+                  return(
+                    <TicketType 
+                      isRemote={ticket.isRemote} 
+                      ticket={ticket.name} 
+                      includesHotel={ticket.includesHotel} 
+                      price={ticket.price} 
+                      key={ticket.id}
+                      id={ticket.id}
+                      selectedTicket= {selectedTicket}
+                      setSelectedTicket = {setSelectedTicket}
+                      currentTicket={ticket}
+                      setHotelOption = {setHotelOption}
+                    />
+                  );
+                }
               })}
             </TicketsTypeList>
             {selectedTicket ?
