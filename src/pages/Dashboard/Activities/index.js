@@ -41,7 +41,6 @@ export default function Activities() {
         const dataPayment = await getPayment(userData.token, dataTicket.id);
         setPayment(dataPayment);
         setTicket(dataTicket);
-
         const userBooking = await getUserBooking(userData.token);
         setBooking(userBooking);
       } catch (error) {
@@ -66,7 +65,7 @@ export default function Activities() {
     <>
       <StyledTypography variant="h4">Escolha de atividades</StyledTypography>
       <Container>
-        { payment && (ticket?.TicketType.includesHotel && booking)? 
+        { payment && (!ticket?.TicketType.isRemote && ((ticket?.TicketType.includesHotel && booking)|| !ticket?.TicketType.includesHotel))? 
           <>
             <ListDaysButtons>
               {days.map((day, i) => {
