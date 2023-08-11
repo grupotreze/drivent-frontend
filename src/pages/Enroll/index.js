@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import AuthLayout from '../../layouts/Auth';
 
 import Input from '../../components/Form/Input';
-import Button from '../../components/Form/Button';
+import { Button } from '../../components/Form/Button';
 import { Row, Title, Label } from '../../components/Auth';
 import Link from '../../components/Link';
 
@@ -43,7 +43,7 @@ export default function Enroll() {
   return (
     <AuthLayout background={eventInfo.backgroundImageUrl}>
       <Row>
-        <img src={eventInfo.logoImageUrl} alt="Event Logo" width="60px" />
+        {/* <img src={eventInfo.logoImageUrl} alt="Event Logo" width="60px" /> */}
         <Title>{eventInfo.title}</Title>
       </Row>
       <Row>
