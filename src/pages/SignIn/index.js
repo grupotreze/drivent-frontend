@@ -37,7 +37,6 @@ export default function SignIn() {
     if (code) {
       try {
         setLoading(true);
-        console.log(`Este é o code ${code}`);
         const response = await axios.post('http://localhost:4000/auth/api/github/token', { code });
         const result = response.data;
         
