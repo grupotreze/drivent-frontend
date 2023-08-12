@@ -30,8 +30,6 @@ export default function PersonalInformationForm() {
   const { getCep } = useCep();
   const { enrollment } = useEnrollment();
   const { saveEnrollmentLoading, saveEnrollment } = useSaveEnrollment();
-  
-  const [name, setName] = useState();
 
   const {
     handleSubmit,
@@ -84,12 +82,6 @@ export default function PersonalInformationForm() {
   });
 
   useEffect(() => {
-    const userDataJSON = localStorage.getItem('userData');
-    if (userDataJSON) {
-      const userData = JSON.parse(userDataJSON);
-      setName(userData.name);
-    }
-    
     if (enrollment) {
       setData({
         name: enrollment.name,
@@ -146,7 +138,7 @@ export default function PersonalInformationForm() {
               label="Nome Completo"
               name="name"
               type="text"
-              value={name ? name : data?.name || ''}
+              value={data?.name || ''}
               onChange={handleChange('name')}
             />
             {errors.name && <ErrorMsg>{errors.name}</ErrorMsg>}
