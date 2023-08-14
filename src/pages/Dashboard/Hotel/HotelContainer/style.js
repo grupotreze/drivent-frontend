@@ -22,3 +22,21 @@ export const RoomContainer = styled.div`
   gap: 10px;
   padding: 20px 0;
 `;
+
+export const SelectHotelsContainer = styled.div`
+  padding-bottom: 20px;
+`;
+
+export const BookingRoom = styled.button`
+  width: 182px;
+  height: 37px;
+  flex-shrink: 0;
+  border-radius: 4px;
+  background: #E0E0E0;
+  box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, 0.25);
+  border: none;
+  cursor: pointer;
+  &:hover{
+    background-color: gray;
+  }
+`;

@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 export default function HotelCard({ hotel, selected, selectHotel }) {
   const [roomsAvailable, setRoomsAvailable] = useState(null);
-  
+
   useEffect(() => {
     let totalCapacity = 0;
     let reserved = 0;
@@ -41,7 +41,11 @@ const Hotel = styled.div`
   height: 264px;
   background-color: ${({ selected, hotelId }) => hotelId === selected ? '#FFEED2': '#EBEBEB'};
   border-radius: 10px;
-  color: #343434
+  color: #343434;
+  cursor: pointer;
+  &:hover{
+    background-color: pink;
+  }
 `;
 
 const Info = styled.div`
