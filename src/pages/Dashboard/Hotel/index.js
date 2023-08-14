@@ -13,11 +13,15 @@ export default function Hotel() {
   const [payment, setPayment] = useState(null);
   const [hotels, setHotels] = useState(null);
 
-  useEffect(() => {
-    getDataTicket();
-    getDataHotels();
+  useEffect(async() => {
+    await getDataTicket();
+    await getDataHotels();
   }, []);
 
+  async function handleData() {
+    await getDataTicket();
+    await getDataHotels();
+  }
   async function getDataTicket() {
     try {
       const dataTicket = await getTicket(userData.token);
@@ -47,7 +51,7 @@ export default function Hotel() {
             ? (
               !ticket.TicketType.includesHotel 
                 ? <InfoMessage>Sua modalidade de ingresso não inclui hospedagem<br/>Prossiga para a escolha de atividades</InfoMessage>
-                : <HotelContainer hotels={hotels}/>
+                : <HotelContainer hotels={hotels} handleData={handleData}/>
             ) 
             : <InfoMessage>Você precisa ter confirmado pagamento antes de fazer a escolha de hospedagem</InfoMessage>
         }
