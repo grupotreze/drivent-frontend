@@ -9,7 +9,7 @@ import UserContext from '../../../../contexts/UserContext.js';
 import { toast } from 'react-toastify';
 import styled from 'styled-components';
 
-export default function HotelContainer({ hotels }) {
+export default function HotelContainer({ hotels, handleData }) {
   const [selected, setSelected] = useState(null);
   const [selectedRoom, setSelectedRoom] = useState(null);
   const [rooms, setRooms] = useState(null);
@@ -44,21 +44,24 @@ export default function HotelContainer({ hotels }) {
         await changeUserBooking(userData.token, { roomId }, userBooking.id);
         toast('Sua reserva foi alterada!');
         setChangingRoom(false);
+        await handleData();
         return await handleUserBooking();
       }
       await createUserBooking(userData.token, { roomId });
       toast('Sua reserva foi efetuada!');
       await handleUserBooking();
       setChangingRoom(false);
+      await handleData();
     } catch (error) {
       console.log(error);
     }
   }
 
-  function handleChangingRoom() {
+  async function handleChangingRoom() {
     setChangingRoom(false);
     setSelectedRoom(null);
     toast('Alterações canceladas!');
+    await handleData();
   }
   return (
     <SelectHotelsContainer>
@@ -81,7 +84,11 @@ export default function HotelContainer({ hotels }) {
             </Info>
           </UserHotelCard>
 
-          <ChangeRoom onClick={() => setChangingRoom(true)}>TROCAR DE QUARTO</ChangeRoom>
+          <ChangeRoom onClick={() => {
+            setChangingRoom(true);
+            handleData();
+            setSelected(null);
+          }}>TROCAR DE QUARTO</ChangeRoom>
         </SeeingUserRoomContainer>
         :
         <>
