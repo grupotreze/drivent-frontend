@@ -16,7 +16,6 @@ export default function RoomCard({ room, selectedRoom, setSelectedRoom, userRoom
     
     const available = room.capacity - room.Booking.length;
     
-    let userRoomSelected = 0;
     for (let i = 0; i < available; i++) {
       if((selectedRoom === room.id && (i+1 >= available)) ) {
         array.push('selected');
@@ -25,11 +24,13 @@ export default function RoomCard({ room, selectedRoom, setSelectedRoom, userRoom
       array.push('free');
     }
     for (let i = 0; i < room.Booking.length; i++) {
-      if((userRoom?.id === room?.id && !userRoomSelected)) {
-        userRoomSelected++;
-        array.push('selected');
-        continue;
+      if((i+(room.Booking.length-1)) === (room.Booking.length - 1)) {
+        if(userRoom?.id === room?.id) {
+          array.push('selected');
+          continue;
+        }
       }
+      
       array.push('reserved');
     }
     setOcupation(array);
