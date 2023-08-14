@@ -35,7 +35,11 @@ export function Activity({ activity, enrolledActivities, setEnrolledActivities, 
     try {
       if(!enrolled) {
         const hasTimeConflict = enrolledActivities.some(({ startTime: start, endTime: end }) => {
-          return (dayjs(activity.startTime).isSame(start) || dayjs(activity.endTime).isSame(end));
+          const hasSameStartOrEnd = dayjs(activity.startTime).isSame(start) || dayjs(activity.endTime).isSame(end);
+          const startsBeforeEndsAfter = dayjs(activity.startTime).isBefore(start) && dayjs(activity.endTime).isAfter(end);
+          const startsAfterEndsBefore = dayjs(activity.startTime).isAfter(start) && dayjs(activity.endTime).isBefore(end);
+
+          return (hasSameStartOrEnd || startsBeforeEndsAfter || startsAfterEndsBefore);
         });
 
         if(hasTimeConflict) return toast.error('Conflito de horários!');
